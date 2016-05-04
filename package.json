@@ -2,6 +2,7 @@
   "name": "mutagrid-cli",
   "version": "0.0.1",
   "description": "node.js Command Line Interface to transpile from Bootstrap to MutaGrid syntax",
+  "homepage": "https://github.com/mutable-tools/mutagrid-cli",
   "main": "bin/cli.js",
   "bin": {
     "mutagrid-cli": "cli.js"
@@ -22,7 +23,6 @@
     "commander": "^2.9.0",
     "fs": "0.0.2",
     "inquirer": "^1.0.2",
-    "nodegit": "^0.12.2",
     "path": "^0.12.7",
     "progress": "^1.1.8",
     "sluggin": "^0.1.1",
