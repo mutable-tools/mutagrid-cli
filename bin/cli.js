@@ -1,28 +1,21 @@
 #!/usr/bin/env node
 
-/*!
-* mutagrid-cli
-* node.js Command Line Interface to transpile from Bootstrap to MutaGrid syntax
-* https://github.com/mutable-tools/mutagrid-cli
-* 2016 Jorge Epuñan | @csslab
-* License: MIT
-*/
+"use strict";
 
-var path      = require('path'),
-    fs        = require('fs'),
-    program   = require('commander'),
-    inquirer  = require('inquirer'),
-    pkg       = require(path.join(__dirname, '../package.json')),
-    progress  = require('progress'),
-    sluggin   = require('Sluggin').Sluggin,
-    cheerio   = require('cheerio'),
-    url       = require('url');
+const path      = require('path'),
+      fs        = require('fs'),
+      program   = require('commander'),
+      inquirer  = require('inquirer'),
+      pkg       = require(path.join(__dirname, '../package.json')),
+      progress  = require('progress'),
+      sluggin   = require('Sluggin').Sluggin,
+      cheerio   = require('cheerio');
 
 program
   .version(pkg.version)
   .parse(process.argv);
 
-var replaceMapBootstrap = {
+const replaceMapBootstrap = {
   'col-':'column-',
   '-xs':'-xsmall',
   '-sm':'-small',
@@ -30,13 +23,13 @@ var replaceMapBootstrap = {
   '-lg':'-large'
 };
 
-var dataFromFile,
-    filename    = './input/otro.html',
-    outputPath  = './output/';
+let dataFromFile;
+const filename    = './input/otro.html';
+const outputPath  = './output/';
 
 
 String.prototype.replaceAll = function(search, replacement) {
-  var target = this;
+  const target = this;
   return target.replace(new RegExp(search, 'g'), replacement);
 }
 
@@ -45,26 +38,22 @@ String.prototype.replaceAll = function(search, replacement) {
  * @uri: string | uri
  * return string
  */
-var cleanName = function( uri ){
-
-  return sluggin( path.basename(uri).split('.')[0] );
-
-}
+const cleanName = uri => sluggin( path.basename(uri).split('.')[0] );
 
 
 /**
  * readFile( filename );
  * @filename: string | file whole path
  */
-function readFile(filename){
+function readFile(filename) {
 
-  fs.readFile(filename, 'utf8', function (err ,data) {
+  fs.readFile(filename, 'utf8', (err, data) => {
     if (err) {
-      return console.log(err + ' 👿');
+      return console.log(`${err} 👿`);
     }
     dataFromFile = data
 
-    var processData = findAndReplace(dataFromFile, replaceMapBootstrap);
+    let processData = findAndReplace(dataFromFile, replaceMapBootstrap);
 
     processData = addMutaGridFile(processData);
 
@@ -84,11 +73,13 @@ function readFile(filename){
  * @data: string | src html file
  * return string with new <link> added
  */
-function addMutaGridFile(data){
+function addMutaGridFile(data) {
 
-  var $ = cheerio.load(data);
+  const $ = cheerio.load(data);
 
-  $('head').append('<link rel="stylesheet" href="http://mutable-tools.github.io/MutaGrid/mutagrid/dist/12/mutagrid.css" />');
+  $('head').append(
+    '<link rel="stylesheet" href="http://mutable-tools.github.io/MutaGrid/mutagrid/dist/12/mutagrid.css" />'
+  );
 
   return $.html();
 
@@ -101,8 +92,9 @@ function addMutaGridFile(data){
  * @replaceMap: object | key/value of elements to replace with
  * return string with src replaced
  */
-function findAndReplace(data, replaceMap){
+function findAndReplace(data, replaceMap) {
 
+  let key;
   for(key in replaceMap){
     data = data.replaceAll(key, replaceMap[key]);
   }
@@ -115,15 +107,15 @@ function findAndReplace(data, replaceMap){
  * writeFile( replacedData );
  * @replacedData: string | src html file
  */
-function writeFile(replacedData){
+function writeFile(replacedData) {
 
-  var finalPath = outputPath + cleanName(filename) + '.html';
+  const finalPath = `${outputPath}${cleanName(filename)}.html`;
 
-  fs.writeFile(finalPath, replacedData, function (err) {
+  fs.writeFile(finalPath, replacedData, err => {
     if (err) {
-      return console.log(err + ' 👿');
+      return console.log(`${err} 👿`);
     }
-    console.log('Ya puedes revisar MutaGrid en ' + finalPath + '\n¡🍻 Salud!');
+    console.log(`Ya puedes revisar MutaGrid en ${finalPath}\n¡🍻 Salud!`);
   });
 
 }
