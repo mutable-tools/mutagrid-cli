@@ -9,14 +9,13 @@
 */
 
 var path      = require('path'),
-    git       = require('nodegit'),
     fs        = require('fs'),
     program   = require('commander'),
     inquirer  = require('inquirer'),
     pkg       = require(path.join(__dirname, '../package.json')),
     progress  = require('progress'),
     sluggin   = require('Sluggin').Sluggin,
-    cheerio   = require("cheerio"),
+    cheerio   = require('cheerio'),
     url       = require('url');
 
 program
